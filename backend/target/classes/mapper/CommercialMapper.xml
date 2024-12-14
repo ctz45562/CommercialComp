@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.backend.mapper.CommercialMapper">
+
+    <select id="selectAll" resultType="com.example.backend.entity.Commercial">
+        select * from commercial
+        <where>
+            <if test="title != null">and title like concat('%',#{title},'%')</if>
+            <if test="platform != null">and platform = #{platform}</if>
+        </where>
+    </select>
+
+    <insert id="newCommercial" parameterType="com.example.backend.entity.Commercial">
+        insert into commercial (`title`, `price`, `url`, `img_url`, `shop_url`, `shop`,`platform`)
+        values (#{title}, #{price}, #{url}, #{imgUrl}, #{shopUrl},#{shop},#{platform});
+    </insert>
+
+    <update id="updateCommercial" parameterType="com.example.backend.entity.Commercial">
+        update commercial set id = #{id}, title = #{title}, price = #{price}, url = #{url}, img_url = #{imgUrl}, shop_url = #{shopUrl},shop = #{shop}, platform = #{platform}
+        where id = #{id}
+    </update>
+
+</mapper>

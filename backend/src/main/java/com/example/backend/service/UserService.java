@@ -1,5 +1,6 @@
 package com.example.backend.service;
 
+import com.example.backend.common.MyException;
 import com.example.backend.entity.User;
 import com.example.backend.mapper.UserMapper;
 import com.github.pagehelper.PageHelper;
@@ -14,8 +15,8 @@ public class UserService {
     @Resource
     private UserMapper userMapper;
 
-    public List<User> selectAll() {
-        return userMapper.selectAll();
+    public List<User> selectAll(User user) {
+        return userMapper.selectAll(user);
     }
 
 
@@ -23,9 +24,13 @@ public class UserService {
         return userMapper.getUserByName(name);
     }
 
-    public PageInfo<User> getPage(int pageNum, int pageSize) {
+    public User getUserByEmail(String email) {
+        return userMapper.getUserByEmail(email);
+    }
+
+    public PageInfo<User> getPage(User user,int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        List<User> users = userMapper.selectAll();
+        List<User> users = userMapper.selectAll(user);
         return PageInfo.of(users);
     }
 
@@ -37,14 +42,10 @@ public class UserService {
         userMapper.updateUser(user);
     }
 
-    public void deleteUser(User user) {
-        userMapper.deleteUser(user);
+    public void deleteUser(List<String> names) {
+        for(String name : names) {
+            userMapper.deleteUser(name);
+        }
     }
 
-    public void login(User user) {
-        String name = user.getName();
-        String password = user.getPassword();
-        User u = getUserByName(name);
-
-    }
 }

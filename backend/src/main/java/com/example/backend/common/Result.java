@@ -11,14 +11,14 @@ public class Result {
     }
 
     public static Result success() {
-        return new Result(0, "success", null);
+        return new Result(200, "success", null);
     }
     public static Result success(Object data) {
         return new Result(200, "success", data);
     }
 
-    public static Result error(){
-        return new Result(500, "error", null);
+    public static Result error(String message) {
+        return new Result(500, message, null);
     }
 
     public int getCode() {

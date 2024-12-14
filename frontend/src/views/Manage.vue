@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="user.role === 'admin'">
     <!--  头部开始 -->
     <div style="height: 60px; background-color: #3c7fff; display: flex; align-items: center">
       <div style="width: 200px; display: flex; align-items: center; padding-left: 15px">
@@ -8,7 +8,7 @@
       </div>
       <div style="flex: 1"></div>
       <div style="width: fit-content; display: flex; align-items: center; padding-right: 30px">
-        <el-image :src="user.avatar" alt="" style="width: 40px; height: 40px"></el-image>
+        <el-image src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png" alt="" style="width: 40px; height: 40px"></el-image>
         <span style="color: white; margin-left: 10px">{{ user.name }}</span>
       </div>
     </div>
@@ -19,27 +19,23 @@
       <!-- 左侧导航菜单开始 -->
       <div style="width: 200px; border-right: 1px solid #ddd; min-height: calc(100vh - 60px)">
         <el-menu router :default-active="router.currentRoute.value.path" :default-openeds="['1']" style="border: 0">
-          <el-menu-item index="/manager/home">
-            <el-icon><House /></el-icon>
-            系统首页
-          </el-menu-item>
-          <el-menu-item index="/manager/data">
-            <el-icon><DataAnalysis /></el-icon>
+<!--          <el-menu-item index="/manage/home">-->
+<!--            <el-icon><House /></el-icon>-->
+<!--            首  页-->
+<!--          </el-menu-item>-->
+          <el-menu-item index="/manage/commercial">
+            <el-icon><Goods /></el-icon>
             商品管理
           </el-menu-item>
-          <el-sub-menu index="1">
-            <template #title>
-              <el-icon><User /></el-icon>
-              <span>用户管理</span>
-            </template>
-            <el-menu-item>管理员信息</el-menu-item>
-            <el-menu-item>普通用户信息</el-menu-item>
-          </el-sub-menu>
-          <el-menu-item index="/manager/home">
-            <el-icon><UserFilled /></el-icon>
+          <el-menu-item index="/manage/user">
+            <el-icon><User /></el-icon>
+            用户管理
+          </el-menu-item>
+          <el-menu-item index="/manage/info">
+            <el-icon><Setting /></el-icon>
             个人信息
           </el-menu-item>
-          <el-menu-item index="/manager/home">
+          <el-menu-item @click="logout">
             <el-icon><SwitchButton /></el-icon>
             退出登录
           </el-menu-item>
@@ -61,11 +57,29 @@
 <script setup>
 import {reactive} from "vue";
 import router from "@/router/index.js";
+import {Goods, Setting} from "@element-plus/icons-vue";
+import {ElMessage} from "element-plus";
 
-const user=reactive({
-  name:'admin',
-  avatar:'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'
-})
+const user=JSON.parse(localStorage.getItem('current-user'))
+console.log(user)
+if(user == null){
+  ElMessage.error('请登录')
+  setTimeout(() => {
+    location.href = '/login'
+  }, 1500)
+}
+if(user.role !== 'admin'){
+  ElMessage.error('您没有权限查看此页面')
+  setTimeout(()=>{
+    location.href = '/home/rand'
+  }, 2000)
+}
+
+const logout = () => {
+  localStorage.removeItem('current-user')
+  location.href = '/login'
+}
+
 </script>
 
 <style>

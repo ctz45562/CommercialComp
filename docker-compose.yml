@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+      - search
+
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "9090:9090"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/commercialComp?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2b8&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: yourPasswordHere
+    depends_on:
+      - mysql
+
+  search:
+    build:
+      context: ./search
+    ports:
+      - "5000:5000"
+
+  mysql:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: yourPasswordHere
+      MYSQL_DATABASE: CommercialComp
+    volumes:
+      - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql

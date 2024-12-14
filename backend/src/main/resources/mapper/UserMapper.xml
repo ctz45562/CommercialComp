@@ -6,6 +6,7 @@
 
     <select id="selectAll" resultType="com.example.backend.entity.User">
         select * from user
+        <if test="name != null"><where>name like concat('%',#{name},'%')</where></if>
     </select>
 
     <insert id="newUser" parameterType="com.example.backend.entity.User">
@@ -18,7 +19,4 @@
         where name = #{name}
     </update>
     
-    <delete id="deleteUser" parameterType="com.example.backend.entity.User">
-        delete from user where name = #{name}
-    </delete>
 </mapper>
